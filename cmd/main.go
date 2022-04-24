@@ -1,12 +1,12 @@
 package main
 
 import (
-	"fmt"
-
 	"github.com/AndreyKosinskiy/go-blog/configs"
+	"github.com/AndreyKosinskiy/go-blog/internal/app"
 )
 
 func main() {
-	c := configs.New()
-	fmt.Println(c)
+	confg := configs.New()
+	app := app.New(confg)
+	app.Run()
 }
