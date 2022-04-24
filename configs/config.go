@@ -25,5 +25,5 @@ func New() *Config {
 	if err != nil {
 		log.Fatal("Unable to decode into map, %v", err)
 	}
-	return &Config{Port: viper.Get("PORT").(string)}
+	return &Config{Port: viper.GetString("PORT")}
 }
