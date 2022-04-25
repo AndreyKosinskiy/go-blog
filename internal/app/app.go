@@ -2,25 +2,26 @@ package app
 
 import (
 	"context"
+	"log"
 	"net/http"
 	"os"
 	"os/signal"
 	"time"
 
 	"github.com/AndreyKosinskiy/go-blog/configs"
-	"github.com/jackc/pgx/v4/pgxpool"
 	"github.com/sirupsen/logrus"
+	"gorm.io/gorm"
 )
 
 type App struct {
 	Server   http.Server
-	Database *pgxpool.Pool
+	Database *gorm.DB
 	Logger   *logrus.Logger
 }
 
 func New(config *configs.Config) *App {
 	s := NewServer(config)
-	db := NewDatabase(config)
+	db := NewORM(config)
 	l := NewLogger(config)
 	return &App{s, db, l}
 }
@@ -40,7 +41,11 @@ func (a *App) Run() {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 	a.Logger.Info("Close database connection ...")
-	a.Database.Close()
+	db, err := a.Database.DB()
+	if err != nil {
+		log.Fatal(err)
+	}
+	db.Close()
 	a.Logger.Info("Close database connection success!")
 	if err := a.Server.Shutdown(ctx); err != nil {
 		a.Logger.Fatal(err)

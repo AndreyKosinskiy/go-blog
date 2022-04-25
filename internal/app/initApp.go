@@ -9,6 +9,8 @@ import (
 	"github.com/jackc/pgx/v4/pgxpool"
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
 )
 
 func NewServer(config *configs.Config) http.Server {
@@ -31,6 +33,14 @@ func NewDatabase(config *configs.Config) *pgxpool.Pool {
 		log.Fatalf("Connection error, can`t ping database: %s", err)
 	}
 	log.Printf("Init Database success!")
+	return db
+}
+
+func NewORM(config *configs.Config) *gorm.DB {
+	db, err := gorm.Open(postgres.Open(config.DbURL), &gorm.Config{})
+	if err != nil {
+		log.Fatal(err)
+	}
 	return db
 }
 
