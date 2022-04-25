@@ -8,22 +8,34 @@ import (
 )
 
 type Config struct {
-	Port       string ""
+	Port       string
 	DebugLevel int
 	DbURL      string
 }
 
 func New() *Config {
+	log.Println("Init config ....")
 	c := &Config{}
+	if err := loadEnvFile(c); err != nil {
+		log.Fatal(err)
+	}
+	port := viper.GetString("PORT")
+	debugLevel := viper.GetInt("LOGGER_LEVEL")
+	dbUrl := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=%s",
+		viper.GetString("DB_HOST"), viper.GetInt("DB_PORT"),
+		viper.GetString("DB_USER"), viper.GetString("DB_PASS"),
+		viper.GetString("DB_NAME"), viper.GetString("DB_SSL_MODE"))
+	log.Println("Init config success!")
+	return &Config{port, debugLevel, dbUrl}
+}
+
+func loadEnvFile(c *Config) (err error) {
 	viper.SetConfigName(".env")
 	viper.SetConfigType("env")
 	viper.AddConfigPath(".")
-	if err := viper.ReadInConfig(); err != nil {
-		log.Fatal(fmt.Errorf("Fatal error config file: %w \n", err))
+
+	if err = viper.ReadInConfig(); err != nil {
+		return err
 	}
-	err := viper.Unmarshal(c)
-	if err != nil {
-		log.Fatal("Unable to decode into map, %v", err)
-	}
-	return &Config{Port: viper.GetString("PORT")}
+	return
 }
