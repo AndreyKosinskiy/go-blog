@@ -1,4 +1,4 @@
-package userRepository
+package repository
 
 type Repository interface {
 	Create()

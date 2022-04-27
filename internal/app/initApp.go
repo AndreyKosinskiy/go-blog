@@ -15,7 +15,6 @@ import (
 
 func NewServer(config *configs.Config) http.Server {
 	e := echo.New()
-
 	s := http.Server{
 		Addr:    ":" + config.Port,
 		Handler: e,

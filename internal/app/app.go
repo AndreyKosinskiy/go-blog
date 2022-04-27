@@ -28,6 +28,8 @@ func New(config *configs.Config) *App {
 
 func (a *App) Run() {
 	a.Logger.Info("Server runing...")
+	a.setMiddlewares()
+	a.setRouters()
 	go func() {
 		if err := a.Server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 			a.Logger.Fatal(err)
