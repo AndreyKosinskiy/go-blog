@@ -1,10 +1,10 @@
 CREATE TABLE IF NOT EXISTS users(
-    id UUID DEFAULT gen_random_uuid(),
-    username VARCHAR NOT NULL,
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_name VARCHAR NOT NULL UNIQUE,
     email VARCHAR NOT NULL UNIQUE,
     password VARCHAR NOT NULL,
-    is_delete BOOLEAN DEFAULT FALSE,
-    create_at TIMESTAMP NOT NULL DEFAULT NOW(),
-    update_at TIMESTAMP,
-    delete_at TIMESTAMP
+    is_deleted BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMP,
+    deleted_at TIMESTAMP
 )

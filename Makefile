@@ -11,3 +11,5 @@ create_migrate_%:
 	migrate create -ext sql -dir internal/migrations -seq %
 migrate:
 	migrate -database postgres://${DB_USER}:${DB_PASS}@${DB_HOST}:${DB_PORT}/${DB_NAME}?sslmode=${DB_SSL_MODE} -path internal/migrations up
+migrate_down:
+	migrate -database postgres://${DB_USER}:${DB_PASS}@${DB_HOST}:${DB_PORT}/${DB_NAME}?sslmode=${DB_SSL_MODE} -path internal/migrations down

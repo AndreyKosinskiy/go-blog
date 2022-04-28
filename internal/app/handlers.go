@@ -26,8 +26,13 @@ func (a *App) CreateUserHandle(c echo.Context) error {
 		c.JSON(http.StatusBadRequest, err)
 	}
 
+	//temp user
+	tu, err := model.CreateUser(u.UserName, u.Email, u.Password)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, u)
+	}
 	r := repository.NewUserRepository(a.Database, a.Logger)
-	nu, err := r.Create(c.Request().Context(), u)
+	nu, err := r.Create(c.Request().Context(), tu)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, u)
 	}
